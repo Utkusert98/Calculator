@@ -1,11 +1,10 @@
-// --- State ---
 let current   = "0";
 let previous  = null;
 let operator  = null;
 let overwrite = false;
 
-let lastOperator = null; // son yapılan operator (örn '+')
-let lastOperand  = null; // son kullanılan ikinci sayı (örn 2)
+let lastOperator = null; // son yapılan operator 
+let lastOperand  = null; // son kullanılan ikinci sayı 
 
 const displayEl = document.getElementById("display");
 
@@ -13,20 +12,18 @@ function updateDisplay() {
   displayEl.textContent = current;
 }
 
-// Rakam girişi
 function inputDigit(d) {
   if (overwrite) {
-    current = String(d);   // yeni sayı başlat
+    current = String(d);
     overwrite = false;
   } else if (current === "0") {
-    current = String(d);   // baştaki 0'ı ez
+    current = String(d);   
   } else {
-    current += String(d);  // sona ekle
+    current += String(d);  
   }
   updateDisplay();
 }
 
-// Nokta (.)
 function inputDot() {
   if (overwrite) {
     current = "0.";
@@ -39,7 +36,6 @@ function inputDot() {
   }
 }
 
-// İşaret değiştir
 function toggleSign() {
   if (current === "0") return;
   if (current.startsWith("-")) current = current.slice(1);
@@ -47,14 +43,12 @@ function toggleSign() {
   updateDisplay();
 }
 
-// Yüzde (basit: sayıyı 100'e böl)
 function percent() {
   const n = parseFloat(current);
   current = String(n / 100);
   updateDisplay();
 }
 
-// Backspace
 function del() {
   if (overwrite) {
     current = "0";
@@ -69,7 +63,7 @@ function del() {
   updateDisplay();
 }
 
-// Tümü temizle
+
 function clearAll() {
   current   = "0";
   previous  = null;
@@ -80,7 +74,7 @@ function clearAll() {
   updateDisplay();
 }
 
-// Basit hesap motoru
+
 function compute(a, b, op) {
   switch (op) {
     case "+": return a + b;
@@ -107,14 +101,14 @@ function setOperator(op) {
     return;
   }
 
-  // Zincirleme hesap: 8 + 2 + 3 gibi; arada '=' yoksa önce mevcutu hesapla
+  // Zincirleme hesap: 8 + 2 + 3 gibi; arada '=' yoksa önce mevcutu hesaplama
   if (operator && previous !== null && !overwrite) {
     evaluate();
   }
 
   operator  = op;
   previous  = parseFloat(current);
-  overwrite = true; // bir sonraki digit yeni sayı başlatsın
+  overwrite = true; // bir sonraki digit yeni sayı başlatması
 }
 
 // Eşittir
@@ -153,7 +147,7 @@ function trimResult(num) {
   return parseFloat(num.toFixed(10));
 }
 
-// --- Click events (güvenli buton seçimi) ---
+// --- Click events  ---
 document.querySelector(".keys").addEventListener("click", (e) => {
   const t = e.target;
   if (!t || t.tagName !== "BUTTON") return;
@@ -171,7 +165,6 @@ document.querySelector(".keys").addEventListener("click", (e) => {
   }
 });
 
-// --- Klavye desteği ---
 window.addEventListener("keydown", (e) => {
   const { key } = e;
   if (/\d/.test(key)) return inputDigit(key);
@@ -182,5 +175,5 @@ window.addEventListener("keydown", (e) => {
   if (key === "Escape") return clearAll();
 });
 
-// İlk ekran
+
 updateDisplay();
